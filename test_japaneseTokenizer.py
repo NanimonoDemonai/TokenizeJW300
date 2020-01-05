@@ -3,7 +3,7 @@ from unittest import TestCase
 import spacy
 
 from normlizer import japanese_normalize
-from tokenizer import JapaneseTokenizer
+from JapaneseTokenizer import JapaneseTokenizer
 
 nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
 test_str = "その ​ 後 ， 国 ​ が ​ 立て ​ た ​ 捕食 ​ 動物 ​ 抑制 ​ 計画 ​ に ​ より ， 1955 ​ 年 ​ から ​ 1964 ​ 年 ​ の ​ 間 ​ に ​ さらに ​ 2 万 7,646 ​ 匹 ​ の ​ コヨテ ​ が ​ 殺さ ​ れ ​ まし ​ た。"
@@ -189,7 +189,7 @@ class TestJapaneseTokenizer(TestCase):
         tokens = JapaneseTokenizer._tokenize(nlp(str))
         self.assertEqual(
             JapaneseTokenizer._tokens_filter(
-                tokens, JapaneseTokenizer._token_map_callback
+                tokens, my_tokenizer._token_map_callback
             ),
             [
                 "また",

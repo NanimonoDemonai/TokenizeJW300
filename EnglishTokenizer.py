@@ -1,10 +1,11 @@
+
 import itertools
 
 import spacy
 
 
-class JapaneseTokenizer:
-    nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
+class EnglishTokenizer:
+    nlp = spacy.load("en_core_web_sm", disable=["tagger"])
 
     def __init__(self):
         self._rids = []  # 捨てた単語置き場
@@ -34,12 +35,12 @@ class JapaneseTokenizer:
         return [
             (
                 token.orth_,
-                JapaneseTokenizer._isNum(token),
-                JapaneseTokenizer._isSym(token),
-                JapaneseTokenizer._isURL(token),
+                EnglishTokenizer._isNum(token),
+                EnglishTokenizer._isSym(token),
+                EnglishTokenizer._isURL(token),
                 token.ent_type_,
             )
-            for token in JapaneseTokenizer._flatten(doc.sents)  # flattenしてから送る
+            for token in EnglishTokenizer._flatten(doc.sents)  # flattenしてから送る
         ]
 
     @staticmethod
@@ -56,8 +57,8 @@ class JapaneseTokenizer:
             nonlocal target
             ent = token[4]
             if ent != "":
-                if ent == "LOC":
-                    # 場所だけは残す
+                if ent == "LOC" or ent == "CARDINAL":
+                    # 場所と数字っぽいのは残す
                     target = ""
                     return True
                 if target == "":
@@ -76,7 +77,7 @@ class JapaneseTokenizer:
 
     def _token_map_callback(self, token):
         # ent = token[4]
-        if token[4] != "" and token[4] != "LOC":
+        if token[4] != "" and token[4] != "LOC" and token[4] != "CARDINAL":
             return "[" + token[4] + "]"
         # url = token[3]
         if token[3]:
@@ -95,8 +96,8 @@ class JapaneseTokenizer:
 
     def tokenize(self, s):
         self._rids = []
-        doc = JapaneseTokenizer.nlp(s)
-        tokens = JapaneseTokenizer._tokenize(doc)
-        tokens = JapaneseTokenizer._tokens_filter(tokens, self._token_map_callback)
-        entities = [*JapaneseTokenizer._entity(doc), *self._rids]
+        doc = EnglishTokenizer.nlp(s)
+        tokens = EnglishTokenizer._tokenize(doc)
+        tokens = EnglishTokenizer._tokens_filter(tokens, self._token_map_callback)
+        entities = [*EnglishTokenizer._entity(doc), *self._rids]
         return tokens, entities
