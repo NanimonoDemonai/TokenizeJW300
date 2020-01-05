@@ -53,6 +53,10 @@ class JapaneseTokenizer:
             nonlocal target
             ent = token[4]
             if ent != "":
+                if ent == "LOC":
+                    # 場所だけは残す
+                    target = ""
+                    return True
                 if target == "":
                     target = ent
                     return True
@@ -66,3 +70,20 @@ class JapaneseTokenizer:
             return True
 
         return [callback(token) for token in tokens if window(token)]
+
+    @staticmethod
+    def _token_map_callback(token):
+        # ent = token[4]
+        if token[4] != "" and token[4] != "LOC":
+            return "[" + token[4] + "]"
+        # url = token[3]
+        if token[3]:
+            return "[URL]"
+        # sym = token[2]
+        if token[2]:
+            return "[SYM]"
+        # num = token[1]
+        if token[1]:
+            return "[NUM]"
+
+        return token[0]

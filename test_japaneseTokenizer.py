@@ -8,6 +8,7 @@ from tokenizer import JapaneseTokenizer
 nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
 test_str = "その ​ 後 ， 国 ​ が ​ 立て ​ た ​ 捕食 ​ 動物 ​ 抑制 ​ 計画 ​ に ​ より ， 1955 ​ 年 ​ から ​ 1964 ​ 年 ​ の ​ 間 ​ に ​ さらに ​ 2 万 7,646 ​ 匹 ​ の ​ コヨテ ​ が ​ 殺さ ​ れ ​ まし ​ た。"
 test_str2 = "一 ​ 時期 ， エルサレム ​ の ​ 近く ​ の ​ 古代 ​ の ​ トフェト ​ で ​ も ， 同様 ​ の ​ 儀式 ​ が ​ 行なわ ​ れ ​ て ​ い ​ まし ​ た。"
+test_str3 = "また ， アトラス ​ 誌 ​ に ​ 掲載 ​ さ ​ れ ​ た ， 日本 ​ から ​ の ​ 報道 ​ は ， 日本 ​ の ​ 子供 ​ たち ​ が ​ テレビ ​ で「ほとんど ​ 際限なく ​ 流血 ​ と ​ 暴力 ​ を ​ 見せ ​ られ ​ て ​ いる」こと ​ を ​ 示し ​ て ​ い ​ ます。"
 
 
 class TestJapaneseTokenizer(TestCase):
@@ -103,5 +104,135 @@ class TestJapaneseTokenizer(TestCase):
                 ("まし", False, False, False, ""),
                 ("た", False, False, False, ""),
                 ("。", False, False, False, ""),
+            ],
+        )
+
+    def test__tokens_map(self):
+        str = japanese_normalize(test_str)
+        tokens = JapaneseTokenizer._tokenize(nlp(str))
+        self.assertEqual(
+            JapaneseTokenizer._tokens_filter(
+                tokens, JapaneseTokenizer._token_map_callback
+            ),
+            [
+                "その",
+                "後",
+                ",",
+                "国",
+                "が",
+                "立て",
+                "た",
+                "捕食",
+                "動物",
+                "抑制",
+                "計画",
+                "に",
+                "より",
+                ",",
+                "[DATE]",
+                "から",
+                "[DATE]",
+                "の",
+                "間",
+                "に",
+                "さらに",
+                "[NUM]",
+                "匹",
+                "の",
+                "コヨテ",
+                "が",
+                "殺さ",
+                "れ",
+                "まし",
+                "た",
+                "。",
+            ],
+        )
+
+    def test__tokens_map2(self):
+        str = japanese_normalize(test_str2)
+        tokens = JapaneseTokenizer._tokenize(nlp(str))
+        self.assertEqual(
+            JapaneseTokenizer._tokens_filter(
+                tokens, JapaneseTokenizer._token_map_callback
+            ),
+            [
+                "一時期",
+                ",",
+                "エルサレム",
+                "の",
+                "近く",
+                "の",
+                "古代",
+                "の",
+                "トフェト",
+                "で",
+                "も",
+                ",",
+                "同様",
+                "の",
+                "儀式",
+                "が",
+                "行なわ",
+                "れ",
+                "て",
+                "い",
+                "まし",
+                "た",
+                "。",
+            ],
+        )
+
+    def test__tokens_map3(self):
+        str = japanese_normalize(test_str3)
+        tokens = JapaneseTokenizer._tokenize(nlp(str))
+        self.assertEqual(
+            JapaneseTokenizer._tokens_filter(
+                tokens, JapaneseTokenizer._token_map_callback
+            ),
+            [
+                "また",
+                ",",
+                "[ORG]",
+                "誌",
+                "に",
+                "掲載",
+                "さ",
+                "れ",
+                "た",
+                ",",
+                "日本",
+                "から",
+                "の",
+                "報道",
+                "は",
+                ",",
+                "日本",
+                "の",
+                "子供",
+                "たち",
+                "が",
+                "テレビ",
+                "で",
+                "「",
+                "ほとんど",
+                "際限",
+                "なく",
+                "流血",
+                "と",
+                "暴力",
+                "を",
+                "見せ",
+                "られ",
+                "て",
+                "いる",
+                "」",
+                "こと",
+                "を",
+                "示し",
+                "て",
+                "い",
+                "ます",
+                "。",
             ],
         )
