@@ -6,6 +6,9 @@ import spacy
 class JapaneseTokenizer:
     nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
 
+    def __init__(self):
+        self._rids = []  # 捨てた単語置き場
+
     @staticmethod
     def _isNum(token):
         return token.pos_ == "NUM" or token.like_num
@@ -42,7 +45,7 @@ class JapaneseTokenizer:
     @staticmethod
     def _entity(doc):
         return [
-            (ent.text, ent.start_char, ent.end_char, ent.label_) for ent in doc.ents
+            (ent.text, ent.label_) for ent in doc.ents
         ]
 
     @staticmethod
@@ -71,19 +74,29 @@ class JapaneseTokenizer:
 
         return [callback(token) for token in tokens if window(token)]
 
-    @staticmethod
-    def _token_map_callback(token):
+    def _token_map_callback(self, token):
         # ent = token[4]
         if token[4] != "" and token[4] != "LOC":
             return "[" + token[4] + "]"
         # url = token[3]
         if token[3]:
+            self._rids.append((token[0], "URL"))
             return "[URL]"
         # sym = token[2]
         if token[2]:
+            self._rids.append((token[0], "SYM"))
             return "[SYM]"
         # num = token[1]
         if token[1]:
+            self._rids.append((token[0], "NUM"))
             return "[NUM]"
 
         return token[0]
+
+    def tokenize(self, s):
+        self._rids = []
+        doc = JapaneseTokenizer.nlp(s)
+        tokens = JapaneseTokenizer._tokenize(doc)
+        tokens = JapaneseTokenizer._tokens_filter(tokens, self._token_map_callback)
+        entities = [*JapaneseTokenizer._entity(doc), *self._rids]
+        return tokens, entities
