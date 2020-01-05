@@ -7,6 +7,7 @@ from tokenizer import JapaneseTokenizer
 
 nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
 test_str = "その ​ 後 ， 国 ​ が ​ 立て ​ た ​ 捕食 ​ 動物 ​ 抑制 ​ 計画 ​ に ​ より ， 1955 ​ 年 ​ から ​ 1964 ​ 年 ​ の ​ 間 ​ に ​ さらに ​ 2 万 7,646 ​ 匹 ​ の ​ コヨテ ​ が ​ 殺さ ​ れ ​ まし ​ た。"
+test_str2 = "一 ​ 時期 ， エルサレム ​ の ​ 近く ​ の ​ 古代 ​ の ​ トフェト ​ で ​ も ， 同様 ​ の ​ 儀式 ​ が ​ 行なわ ​ れ ​ て ​ い ​ まし ​ た。"
 
 
 class TestJapaneseTokenizer(TestCase):
@@ -50,4 +51,19 @@ class TestJapaneseTokenizer(TestCase):
                 (31, "た", False, False, ""),
                 (32, "。", False, False, ""),
             ],
+        )
+
+    def test__entity(self):
+        str = japanese_normalize(test_str)
+        entities = JapaneseTokenizer._entity(nlp(str))
+        self.assertEqual(
+            entities, [("1955年", 21, 26, "DATE"), ("1964年", 28, 33, "DATE")]
+        )
+
+    def test__entity2(self):
+        str = japanese_normalize(test_str2)
+        entities = JapaneseTokenizer._entity(nlp(str))
+
+        self.assertEqual(
+            entities, [('エルサレム', 4, 9, 'LOC')]
         )
