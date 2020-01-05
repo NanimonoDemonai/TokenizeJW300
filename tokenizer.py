@@ -20,6 +20,10 @@ class JapaneseTokenizer:
 
     @staticmethod
     def _flatten(arr):
+        """
+        配列をflatにする
+        [[A],[B]]->[A,B]
+        """
         return itertools.chain.from_iterable(arr)
 
     @staticmethod
