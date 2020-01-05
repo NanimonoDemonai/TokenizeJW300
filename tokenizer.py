@@ -7,9 +7,19 @@ class JapaneseTokenizer:
     nlp = spacy.load("ja_ginza", disable=["JapaneseCorrector"])
 
     @staticmethod
+    def _isNum(token):
+        return token.pos_ == "NUM" or token.like_num
+
+    @staticmethod
     def _tokenize(doc):
         return [
-            (token.i, token.orth_, token.like_num, token.like_url, token.ent_type_)
+            (
+                token.i,
+                token.orth_,
+                JapaneseTokenizer._isNum(token),
+                token.like_url,
+                token.ent_type_,
+            )
             for token in itertools.chain.from_iterable(doc.sents)  # flattenしてから送る
         ]
 

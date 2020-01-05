@@ -40,7 +40,7 @@ class TestJapaneseTokenizer(TestCase):
                 (20, "間", False, False, ""),
                 (21, "に", False, False, ""),
                 (22, "さらに", False, False, ""),
-                (23, "2万7,646", False, False, ""),
+                (23, "2万7,646", True, False, ""),  # 漢数字がしっかり数値として扱われるか確認する
                 (24, "匹", False, False, ""),
                 (25, "の", False, False, ""),
                 (26, "コヨテ", False, False, ""),
@@ -64,6 +64,4 @@ class TestJapaneseTokenizer(TestCase):
         str = japanese_normalize(test_str2)
         entities = JapaneseTokenizer._entity(nlp(str))
 
-        self.assertEqual(
-            entities, [('エルサレム', 4, 9, 'LOC')]
-        )
+        self.assertEqual(entities, [("エルサレム", 4, 9, "LOC")])
