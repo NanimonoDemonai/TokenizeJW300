@@ -95,8 +95,12 @@ class JapaneseTokenizer:
 
     def tokenize(self, s):
         self._rids = []
-        doc = JapaneseTokenizer.nlp(s)
-        tokens = JapaneseTokenizer._tokenize(doc)
-        tokens = JapaneseTokenizer._tokens_filter(tokens, self._token_map_callback)
-        entities = [*JapaneseTokenizer._entity(doc), *self._rids]
-        return tokens, entities
+        result = []
+        docs = JapaneseTokenizer.nlp.pipe(s)
+
+        for doc in docs:
+            tokens = JapaneseTokenizer._tokenize(doc)
+            tokens = JapaneseTokenizer._tokens_filter(tokens, self._token_map_callback)
+            entities = [*JapaneseTokenizer._entity(doc), *self._rids]
+            result.append(tokens, entities)
+        return result
