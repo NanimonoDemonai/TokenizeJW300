@@ -1,4 +1,3 @@
-
 import itertools
 
 import spacy
@@ -96,8 +95,13 @@ class EnglishTokenizer:
 
     def tokenize(self, s):
         self._rids = []
-        doc = EnglishTokenizer.nlp(s)
-        tokens = EnglishTokenizer._tokenize(doc)
-        tokens = EnglishTokenizer._tokens_filter(tokens, self._token_map_callback)
-        entities = [*EnglishTokenizer._entity(doc), *self._rids]
-        return tokens, entities
+        result = []
+        docs = EnglishTokenizer.nlp.pipe(s,n_process=-1)
+
+        for doc in docs:
+            tokens = EnglishTokenizer._tokenize(doc)
+            tokens = EnglishTokenizer._tokens_filter(tokens, self._token_map_callback)
+            entities = [*EnglishTokenizer._entity(doc), *self._rids]
+            result.append((tokens, entities))
+            self._rids = []
+        return result

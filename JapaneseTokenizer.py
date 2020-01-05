@@ -102,5 +102,6 @@ class JapaneseTokenizer:
             tokens = JapaneseTokenizer._tokenize(doc)
             tokens = JapaneseTokenizer._tokens_filter(tokens, self._token_map_callback)
             entities = [*JapaneseTokenizer._entity(doc), *self._rids]
-            result.append(tokens, entities)
+            result.append((tokens, entities))
+            self._rids = []
         return result
