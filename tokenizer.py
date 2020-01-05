@@ -19,6 +19,10 @@ class JapaneseTokenizer:
         return token.like_url
 
     @staticmethod
+    def _flatten(arr):
+        return itertools.chain.from_iterable(arr)
+
+    @staticmethod
     def _tokenize(doc):
         return [
             (
@@ -28,7 +32,7 @@ class JapaneseTokenizer:
                 JapaneseTokenizer._isURL(token),
                 token.ent_type_,
             )
-            for token in itertools.chain.from_iterable(doc.sents)  # flattenしてから送る
+            for token in JapaneseTokenizer._flatten(doc.sents)  # flattenしてから送る
         ]
 
     @staticmethod
