@@ -65,3 +65,43 @@ class TestJapaneseTokenizer(TestCase):
         entities = JapaneseTokenizer._entity(nlp(str))
 
         self.assertEqual(entities, [("エルサレム", 4, 9, "LOC")])
+
+    def test__tokens_filter(self):
+        str = japanese_normalize(test_str)
+        tokens = JapaneseTokenizer._tokenize(nlp(str))
+        self.assertEqual(
+            JapaneseTokenizer._tokens_filter(tokens, lambda token: token),
+            [
+                ("その", False, False, False, ""),
+                ("後", False, False, False, ""),
+                (",", False, False, False, ""),
+                ("国", False, False, False, ""),
+                ("が", False, False, False, ""),
+                ("立て", False, False, False, ""),
+                ("た", False, False, False, ""),
+                ("捕食", False, False, False, ""),
+                ("動物", False, False, False, ""),
+                ("抑制", False, False, False, ""),
+                ("計画", False, False, False, ""),
+                ("に", False, False, False, ""),
+                ("より", False, False, False, ""),
+                (",", False, False, False, ""),
+                ("1955", True, False, False, "DATE"),  # 減っている
+                ("から", False, False, False, ""),
+                ("1964", True, False, False, "DATE"),  # 減っている
+                ("の", False, False, False, ""),
+                ("間", False, False, False, ""),
+                ("に", False, False, False, ""),
+                ("さらに", False, False, False, ""),
+                ("2万7,646", True, False, False, ""),
+                ("匹", False, False, False, ""),
+                ("の", False, False, False, ""),
+                ("コヨテ", False, False, False, ""),
+                ("が", False, False, False, ""),
+                ("殺さ", False, False, False, ""),
+                ("れ", False, False, False, ""),
+                ("まし", False, False, False, ""),
+                ("た", False, False, False, ""),
+                ("。", False, False, False, ""),
+            ],
+        )

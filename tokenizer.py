@@ -44,3 +44,25 @@ class JapaneseTokenizer:
         return [
             (ent.text, ent.start_char, ent.end_char, ent.label_) for ent in doc.ents
         ]
+
+    @staticmethod
+    def _tokens_filter(tokens, callback):
+        target = ""
+
+        def window(token):
+            nonlocal target
+            ent = token[4]
+            if ent != "":
+                if target == "":
+                    target = ent
+                    return True
+                else:
+                    if target == ent:
+                        return False
+                    else:
+                        target = ent
+                        return True
+            target = ""
+            return True
+
+        return [callback(token) for token in tokens if window(token)]
