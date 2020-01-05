@@ -51,7 +51,7 @@ class TestJapaneseTokenizer(TestCase):
                 ("れ", False, False, False, ""),
                 ("まし", False, False, False, ""),
                 ("た", False, False, False, ""),
-                ("。", False, False, False, ""),
+                (".", False, False, False, ""),
             ],
         )
 
@@ -104,7 +104,7 @@ class TestJapaneseTokenizer(TestCase):
                 ("れ", False, False, False, ""),
                 ("まし", False, False, False, ""),
                 ("た", False, False, False, ""),
-                ("。", False, False, False, ""),
+                (".", False, False, False, ""),
             ],
         )
 
@@ -146,7 +146,7 @@ class TestJapaneseTokenizer(TestCase):
                 "れ",
                 "まし",
                 "た",
-                "。",
+                ".",
             ],
         )
 
@@ -180,7 +180,7 @@ class TestJapaneseTokenizer(TestCase):
                 "い",
                 "まし",
                 "た",
-                "。",
+                ".",
             ],
         )
 
@@ -234,7 +234,7 @@ class TestJapaneseTokenizer(TestCase):
                 "て",
                 "い",
                 "ます",
-                "。",
+                ".",
             ],
         )
 
@@ -275,7 +275,7 @@ class TestJapaneseTokenizer(TestCase):
                     "れ",
                     "まし",
                     "た",
-                    "。",
+                    ".",
                 ],
                 [("1955年", "DATE"), ("1964年", "DATE"), ("2万7,646", "NUM")],
             ),
@@ -330,7 +330,7 @@ class TestJapaneseTokenizer(TestCase):
                     "て",
                     "い",
                     "ます",
-                    "。",
+                    ".",
                 ],
                 [("アトラス", "ORG"), ("日本", "LOC"), ("日本", "LOC")],
             ),
