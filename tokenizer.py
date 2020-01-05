@@ -11,13 +11,21 @@ class JapaneseTokenizer:
         return token.pos_ == "NUM" or token.like_num
 
     @staticmethod
+    def _isSym(token):
+        return token.pos_ == "SYM"
+
+    @staticmethod
+    def _isURL(token):
+        return token.like_url
+
+    @staticmethod
     def _tokenize(doc):
         return [
             (
-                token.i,
                 token.orth_,
                 JapaneseTokenizer._isNum(token),
-                token.like_url,
+                JapaneseTokenizer._isSym(token),
+                JapaneseTokenizer._isURL(token),
                 token.ent_type_,
             )
             for token in itertools.chain.from_iterable(doc.sents)  # flattenしてから送る
